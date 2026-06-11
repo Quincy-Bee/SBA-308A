@@ -9,6 +9,7 @@ async function getAllPokemon() {
       getAllPokemon(take: 1025) {
         key
         species
+        num
       }
     }
   `;
@@ -31,8 +32,7 @@ async function getPokemon(name) {
     query GetPokemon($name: String!) {
       getPokemon(pokemon: $name) {
         name
-        sprite
-        shinySprite
+        num
         species
         types {
           name
@@ -58,14 +58,14 @@ async function getPokemon(name) {
   return data.data.getPokemon;
 }
 
-// Populate dropdown
+// dropdown
 async function populateDropdown() {
   const pokemonList = await getAllPokemon();
 
   pokemonList.forEach((pokemon) => {
     const option = document.createElement("option");
 
-    option.value = pokemon.species;
+    option.value = pokemon.key;
     option.textContent = pokemon.species;
 
     pokemonSelect.appendChild(option);
@@ -74,7 +74,7 @@ async function populateDropdown() {
 
 populateDropdown();
 
-// When user selects a Pokémon
+// When user selects Pokémon
 pokemonSelect.addEventListener("change", async (event) => {
   const name = event.target.value;
 
@@ -82,20 +82,19 @@ pokemonSelect.addEventListener("change", async (event) => {
 
   const pokemon = await getPokemon(name);
 
-  console.log(pokemon);
-
   result.innerHTML = `
     <div>
       <h2>${pokemon.name}</h2>
+
       <img
-        src="${pokemon.sprite || pokemon.shinySprite}"
+        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.num}.png"
         alt="${pokemon.name}"
-        style="width: 200px;"
       />
-      <p><strong>Species:</strong> ${pokemon.species}</p>
-      <p><strong>Types:</strong> ${pokemon.types.map(t => t.name).join(", ")}</p>
-      <p><strong>Height:</strong> ${pokemon.height}</p>
-      <p><strong>Weight:</strong> ${pokemon.weight}</p>
+
+      <p>Species:</strong> ${pokemon.species}</p>
+      <p>Types:</strong> ${pokemon.types.map(t => t.name).join(", ")}</p>
+      <p>Height:</strong> ${pokemon.height}</p>
+      <p>Weight:</strong> ${pokemon.weight}</p>
     </div>
   `;
 });
