@@ -1,8 +1,6 @@
-
 // Elements
 const pokemonSelect = document.querySelector("#pokemonSelect");
 const result = document.querySelector("#result");
-
 
 // Get ALL Pokémon for dropdown
 async function getAllPokemon() {
@@ -27,7 +25,6 @@ async function getAllPokemon() {
   return data.data.getAllPokemon;
 }
 
-
 // Get single Pokémon details
 async function getPokemon(name) {
   const query = `
@@ -35,6 +32,7 @@ async function getPokemon(name) {
       getPokemon(pokemon: $name) {
         name
         sprite
+        shinySprite
         species
         types {
           name
@@ -60,7 +58,6 @@ async function getPokemon(name) {
   return data.data.getPokemon;
 }
 
-
 // Populate dropdown
 async function populateDropdown() {
   const pokemonList = await getAllPokemon();
@@ -68,7 +65,7 @@ async function populateDropdown() {
   pokemonList.forEach((pokemon) => {
     const option = document.createElement("option");
 
-    option.value = pokemon.key;
+    option.value = pokemon.species;
     option.textContent = pokemon.species;
 
     pokemonSelect.appendChild(option);
@@ -76,7 +73,6 @@ async function populateDropdown() {
 }
 
 populateDropdown();
-
 
 // When user selects a Pokémon
 pokemonSelect.addEventListener("change", async (event) => {
@@ -86,10 +82,16 @@ pokemonSelect.addEventListener("change", async (event) => {
 
   const pokemon = await getPokemon(name);
 
+  console.log(pokemon);
+
   result.innerHTML = `
     <div>
       <h2>${pokemon.name}</h2>
-      <img src="${pokemon.sprite}" alt="${pokemon.name}" />
+      <img
+        src="${pokemon.sprite || pokemon.shinySprite}"
+        alt="${pokemon.name}"
+        style="width: 200px;"
+      />
       <p><strong>Species:</strong> ${pokemon.species}</p>
       <p><strong>Types:</strong> ${pokemon.types.map(t => t.name).join(", ")}</p>
       <p><strong>Height:</strong> ${pokemon.height}</p>

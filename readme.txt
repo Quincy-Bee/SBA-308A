@@ -1,0 +1,1 @@
+This project uses a Pokémon API to get data and display it on a web page. The user selects a Pokémon from a dropdown menu.
