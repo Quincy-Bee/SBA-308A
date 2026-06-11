@@ -1,0 +1,16 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-image: url("./pokemon-chromebook-wallpaper.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+h1 {
+    color: #faf88b;
+    font-size: 20pt;
+
+}
